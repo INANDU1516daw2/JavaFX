@@ -1,5 +1,8 @@
 package com.hascode.hyperballs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TimelineBuilder;
@@ -42,6 +45,8 @@ public class HyperBallsMain extends Application {
 	private double movingSpeed = 1.0;
 	private double paddleDragX = 0.0;
 	private double paddleTranslateX = 0.0;
+
+	private final List<Rectangle> boxes = new ArrayList<>();
 
 	private final Circle ball = CircleBuilder.create().radius(10.0)
 			.fill(Color.BLACK).build();
@@ -121,10 +126,10 @@ public class HyperBallsMain extends Application {
 	public void start(final Stage stage) throws Exception {
 		initGui(stage);
 		initGame();
-
 	}
 
 	protected void checkCollisions() {
+		checkBoxCollisions();
 		if (ball.intersects(paddle.getBoundsInLocal())) {
 			incrementSpeed();
 			movingDown = false;
@@ -153,6 +158,14 @@ public class HyperBallsMain extends Application {
 		}
 	}
 
+	private void checkBoxCollisions() {
+		for (Rectangle r : boxes) {
+			if (ball.intersects(r.getBoundsInLocal())) {
+				area.getChildren().remove(r);
+			}
+		}
+	}
+
 	private void incrementSpeed() {
 		if (movingSpeed <= 4)
 			movingSpeed += movingSpeed * 0.25;
@@ -175,9 +188,27 @@ public class HyperBallsMain extends Application {
 		area.requestFocus();
 	}
 
+	private void initBoxes() {
+		int startX = 25;
+		int padX = 2;
+		int startY = 50;
+		int padY = 2;
+		for (int v = 1; v <= 4; v++) {
+			for (int h = 1; h <= 20; h++) {
+				int x = startX + (h * 20) + padX;
+				int y = startY + (v * 20) + padY;
+				Rectangle r = RectangleBuilder.create().height(20).width(20)
+						.fill(Color.BISQUE).layoutX(x).layoutY(y).build();
+				boxes.add(r);
+				area.getChildren().add(r);
+			}
+		}
+	}
+
 	private void initGui(final Stage stage) {
 		Scene scene = SceneBuilder.create().width(700).height(500)
 				.fill(Color.GRAY).root(area).build();
+		initBoxes();
 		stage.setScene(scene);
 		stage.setTitle("HyperBalls");
 		stage.show();
