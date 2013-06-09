@@ -40,6 +40,7 @@ public class HyperBallsMain extends Application {
 	private final DoubleProperty paddleX = new SimpleDoubleProperty();
 	private final BooleanProperty gameStopped = new SimpleBooleanProperty();
 	private final BooleanProperty gameLost = new SimpleBooleanProperty(false);
+	private final BooleanProperty gameWon = new SimpleBooleanProperty(false);
 	private boolean movingDown = true;
 	private boolean movingRight = true;
 	private double movingSpeed = 1.0;
@@ -87,6 +88,10 @@ public class HyperBallsMain extends Application {
 			.font(Font.font("Arial", 40.0)).fill(Color.RED).layoutX(150)
 			.layoutY(250).build();
 
+	private final Text winnerText = TextBuilder.create().text("You've won!")
+			.font(Font.font("Arial", 40.0)).fill(Color.GREEN).layoutX(150)
+			.layoutY(250).build();
+
 	private final Button startButton = ButtonBuilder.create().text("Start")
 			.layoutX(540).layoutY(100)
 			.onAction(new EventHandler<ActionEvent>() {
@@ -105,12 +110,14 @@ public class HyperBallsMain extends Application {
 			.create()
 			.focusTraversable(true)
 			.children(ball, borderTop, borderBottom, borderLeft, borderRight,
-					startButton, infotext, link, paddle, gameOverText).build();
+					startButton, infotext, link, paddle, gameOverText,
+					winnerText).build();
 
 	private final EventHandler<ActionEvent> pulseEvent = new EventHandler<ActionEvent>() {
 		@Override
 		public void handle(final ActionEvent evt) {
 			checkCollisions();
+			checkWin();
 			double x = movingRight ? movingSpeed : -movingSpeed;
 			double y = movingDown ? movingSpeed : -movingSpeed;
 			ballX.set(ballX.get() + x);
@@ -160,9 +167,24 @@ public class HyperBallsMain extends Application {
 
 	private void checkBoxCollisions() {
 		for (Rectangle r : boxes) {
-			if (ball.intersects(r.getBoundsInLocal())) {
+			if (ball.intersects(r.getBoundsInParent())) {
 				area.getChildren().remove(r);
 			}
+		}
+	}
+
+	private void checkWin() {
+		boolean win = true;
+		for (Rectangle r : boxes) {
+			if (area.getChildren().contains(r)) {
+				win = false;
+				break;
+			}
+		}
+		if (win) {
+			gameWon.set(true);
+			gameStopped.set(true);
+			heartbeat.stop();
 		}
 	}
 
@@ -172,6 +194,8 @@ public class HyperBallsMain extends Application {
 	}
 
 	private void initGame() {
+		area.getChildren().removeAll(boxes);
+		area.getChildren().addAll(boxes);
 		movingSpeed = 1.0;
 		movingDown = true;
 		movingRight = true;
@@ -185,22 +209,21 @@ public class HyperBallsMain extends Application {
 		gameStopped.set(true);
 		gameLost.set(false);
 		gameOverText.visibleProperty().bind(gameLost);
+		gameWon.set(false);
+		winnerText.visibleProperty().bind(gameWon);
 		area.requestFocus();
 	}
 
 	private void initBoxes() {
 		int startX = 25;
-		int padX = 2;
 		int startY = 50;
-		int padY = 2;
-		for (int v = 1; v <= 4; v++) {
+		for (int v = 1; v <= 8; v++) {
 			for (int h = 1; h <= 20; h++) {
-				int x = startX + (h * 20) + padX;
-				int y = startY + (v * 20) + padY;
+				int x = startX + (h * 20);
+				int y = startY + (v * 20);
 				Rectangle r = RectangleBuilder.create().height(20).width(20)
 						.fill(Color.BISQUE).layoutX(x).layoutY(y).build();
 				boxes.add(r);
-				area.getChildren().add(r);
 			}
 		}
 	}
