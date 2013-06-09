@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.GroupBuilder;
 import javafx.scene.Scene;
@@ -39,8 +40,8 @@ public class HyperBallsMain extends Application {
 	private boolean movingDown = true;
 	private boolean movingRight = true;
 	private double movingSpeed = 1.0;
-	private double paddleDragX = 200.0;
-	private double paddleTranslateX = 200.0;
+	private double paddleDragX = 0.0;
+	private double paddleTranslateX = 0.0;
 
 	private final Circle ball = CircleBuilder.create().radius(10.0)
 			.fill(Color.BLACK).build();
@@ -58,18 +59,18 @@ public class HyperBallsMain extends Application {
 			.width(2).height(500).build();
 
 	private final Rectangle paddle = RectangleBuilder.create().x(200).y(460)
-			.width(150).height(15).fill(Color.BLACK)
+			.width(150).height(15).fill(Color.BLACK).cursor(Cursor.HAND)
 			.onMousePressed(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(final MouseEvent evt) {
-					paddleTranslateX = paddle.getTranslateX();
+					paddleTranslateX = paddle.getTranslateX() + 150;
 					paddleDragX = evt.getSceneX();
 				}
 			}).onMouseDragged(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(final MouseEvent evt) {
-					double y = evt.getSceneX() - paddleDragX;
-					paddleX.setValue(paddleTranslateX + y);
+					double x = paddleTranslateX + evt.getSceneX() - paddleDragX;
+					paddleX.setValue(x);
 				}
 			}).build();
 
@@ -143,6 +144,12 @@ public class HyperBallsMain extends Application {
 		if (ball.intersects(borderRight.getBoundsInLocal())) {
 			incrementSpeed();
 			movingRight = false;
+		}
+		if (paddle.intersects(borderRight.getBoundsInLocal())) {
+			paddleX.set(350);
+		}
+		if (paddle.intersects(borderLeft.getBoundsInLocal())) {
+			paddleX.set(0);
 		}
 	}
 
