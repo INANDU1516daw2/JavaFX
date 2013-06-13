@@ -8,8 +8,10 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -45,23 +47,25 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class HyperBallsMain extends Application {
+	private static final int INITIAL_BLOCKS_HORIZONTAL = 10;
+	private static final int INITIAL_BLOCKS_VERTICAL = 5;
+	private static final int INITIAL_AMOUNT_BLOCKS = INITIAL_BLOCKS_HORIZONTAL
+			* INITIAL_BLOCKS_VERTICAL;
+
 	private final DoubleProperty ballX = new SimpleDoubleProperty();
 	private final DoubleProperty ballY = new SimpleDoubleProperty();
 	private final DoubleProperty paddleX = new SimpleDoubleProperty();
 	private final BooleanProperty gameStopped = new SimpleBooleanProperty();
 	private final BooleanProperty gameLost = new SimpleBooleanProperty(false);
 	private final BooleanProperty gameWon = new SimpleBooleanProperty(false);
+	private final IntegerProperty boxesLeft = new SimpleIntegerProperty(
+			INITIAL_AMOUNT_BLOCKS);
 
 	private boolean movingDown = true;
 	private boolean movingRight = true;
 	private double movingSpeed = 1.0;
 	private double paddleDragX = 0.0;
 	private double paddleTranslateX = 0.0;
-
-	private static final int INITIAL_BLOCKS_HORIZONTAL = 10;
-	private static final int INITIAL_BLOCKS_VERTICAL = 5;
-	private static final int INITIAL_AMOUNT_BLOCKS = INITIAL_BLOCKS_HORIZONTAL
-			* INITIAL_BLOCKS_VERTICAL;
 
 	private static final Image ICON = new Image(
 			HyperBallsMain.class.getResourceAsStream("/head.png"));
@@ -109,11 +113,11 @@ public class HyperBallsMain extends Application {
 
 	private final Text gameOverText = TextBuilder.create().text("Game Over")
 			.font(Font.font("Arial", 40.0)).fill(Color.RED).layoutX(150)
-			.layoutY(270).build();
+			.layoutY(300).build();
 
 	private final Text winnerText = TextBuilder.create().text("You've won!")
 			.font(Font.font("Arial", 40.0)).fill(Color.GREEN).layoutX(150)
-			.layoutY(270).build();
+			.layoutY(300).build();
 
 	private final Button startButton = ButtonBuilder.create().text("Start")
 			.onAction(new EventHandler<ActionEvent>() {
@@ -137,7 +141,7 @@ public class HyperBallsMain extends Application {
 			.text("www.hascode.com").layoutX(360).layoutY(505).build();
 
 	private final ProgressBar progressBar = ProgressBarBuilder.create()
-			.progress(1.).build();
+			.progress(INITIAL_AMOUNT_BLOCKS).build();
 
 	private final Label remainingBlocksLabel = LabelBuilder.create().build();
 
@@ -155,8 +159,8 @@ public class HyperBallsMain extends Application {
 	private final EventHandler<ActionEvent> pulseEvent = new EventHandler<ActionEvent>() {
 		@Override
 		public void handle(final ActionEvent evt) {
-			checkCollisions();
 			checkWin();
+			checkCollisions();
 			double x = movingRight ? movingSpeed : -movingSpeed;
 			double y = movingDown ? movingSpeed : -movingSpeed;
 			ballX.set(ballX.get() + x);
@@ -174,6 +178,14 @@ public class HyperBallsMain extends Application {
 		initGame();
 	}
 
+	protected void checkWin() {
+		if (0 == boxesLeft.get()) {
+			gameWon.set(true);
+			gameStopped.set(true);
+			heartbeat.stop();
+		}
+	}
+
 	protected void checkCollisions() {
 		checkBoxCollisions();
 		if (ball.intersects(paddle.getBoundsInLocal())) {
@@ -187,6 +199,7 @@ public class HyperBallsMain extends Application {
 		if (ball.intersects(borderBottom.getBoundsInLocal())) {
 			gameStopped.set(true);
 			gameLost.set(true);
+			heartbeat.stop();
 		}
 		if (ball.intersects(borderLeft.getBoundsInLocal())) {
 			incrementSpeed();
@@ -206,24 +219,10 @@ public class HyperBallsMain extends Application {
 
 	private void checkBoxCollisions() {
 		for (ImageView r : boxes) {
-			if (ball.intersects(r.getBoundsInParent())) {
+			if (r.isVisible() && ball.intersects(r.getBoundsInParent())) {
+				boxesLeft.set(boxesLeft.get() - 1);
 				r.setVisible(false);
 			}
-		}
-	}
-
-	private void checkWin() {
-		boolean win = true;
-		for (ImageView r : boxes) {
-			if (area.getChildren().contains(r)) {
-				win = false;
-				break;
-			}
-		}
-		if (win) {
-			gameWon.set(true);
-			gameStopped.set(true);
-			heartbeat.stop();
 		}
 	}
 
@@ -233,6 +232,7 @@ public class HyperBallsMain extends Application {
 	}
 
 	private void initGame() {
+		boxesLeft.set(INITIAL_AMOUNT_BLOCKS);
 		for (ImageView r : boxes) {
 			r.setVisible(true);
 		}
@@ -252,9 +252,10 @@ public class HyperBallsMain extends Application {
 		gameWon.set(false);
 		winnerText.visibleProperty().bind(gameWon);
 		area.requestFocus();
+		progressBar.progressProperty().bind(
+				boxesLeft.subtract(INITIAL_AMOUNT_BLOCKS).multiply(-1));
 		remainingBlocksLabel.textProperty().bind(
-				Bindings.format("%d blocks remaining", INITIAL_AMOUNT_BLOCKS
-						- (INITIAL_AMOUNT_BLOCKS - boxes.size())));
+				Bindings.format("%s boxes left", boxesLeft.asString()));
 	}
 
 	private void initBoxes() {
