@@ -5,6 +5,7 @@ import javafx.animation.Timeline;
 import javafx.animation.TimelineBuilder;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -28,6 +29,9 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressBarBuilder;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.ToolBarBuilder;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.ImageViewBuilder;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -47,13 +51,22 @@ public class HyperBallsMain extends Application {
 	private final BooleanProperty gameStopped = new SimpleBooleanProperty();
 	private final BooleanProperty gameLost = new SimpleBooleanProperty(false);
 	private final BooleanProperty gameWon = new SimpleBooleanProperty(false);
+
 	private boolean movingDown = true;
 	private boolean movingRight = true;
 	private double movingSpeed = 1.0;
 	private double paddleDragX = 0.0;
 	private double paddleTranslateX = 0.0;
 
-	private final ObservableList<Rectangle> boxes = FXCollections
+	private static final int INITIAL_BLOCKS_HORIZONTAL = 10;
+	private static final int INITIAL_BLOCKS_VERTICAL = 5;
+	private static final int INITIAL_AMOUNT_BLOCKS = INITIAL_BLOCKS_HORIZONTAL
+			* INITIAL_BLOCKS_VERTICAL;
+
+	private static final Image ICON = new Image(
+			HyperBallsMain.class.getResourceAsStream("/head.png"));
+
+	private final ObservableList<ImageView> boxes = FXCollections
 			.observableArrayList();
 
 	private final Circle ball = CircleBuilder.create().radius(10.0)
@@ -192,16 +205,16 @@ public class HyperBallsMain extends Application {
 	}
 
 	private void checkBoxCollisions() {
-		for (Rectangle r : boxes) {
+		for (ImageView r : boxes) {
 			if (ball.intersects(r.getBoundsInParent())) {
-				area.getChildren().remove(r);
+				r.setVisible(false);
 			}
 		}
 	}
 
 	private void checkWin() {
 		boolean win = true;
-		for (Rectangle r : boxes) {
+		for (ImageView r : boxes) {
 			if (area.getChildren().contains(r)) {
 				win = false;
 				break;
@@ -220,8 +233,9 @@ public class HyperBallsMain extends Application {
 	}
 
 	private void initGame() {
-		area.getChildren().removeAll(boxes);
-		area.getChildren().addAll(boxes);
+		for (ImageView r : boxes) {
+			r.setVisible(true);
+		}
 		movingSpeed = 1.0;
 		movingDown = true;
 		movingRight = true;
@@ -238,21 +252,24 @@ public class HyperBallsMain extends Application {
 		gameWon.set(false);
 		winnerText.visibleProperty().bind(gameWon);
 		area.requestFocus();
-		remainingBlocksLabel.setText("40 blocks remaining");
+		remainingBlocksLabel.textProperty().bind(
+				Bindings.format("%d blocks remaining", INITIAL_AMOUNT_BLOCKS
+						- (INITIAL_AMOUNT_BLOCKS - boxes.size())));
 	}
 
 	private void initBoxes() {
-		int startX = 25;
-		int startY = 50;
-		for (int v = 1; v <= 8; v++) {
-			for (int h = 1; h <= 20; h++) {
-				int x = startX + (h * 20);
-				int y = startY + (v * 20);
-				Rectangle r = RectangleBuilder.create().height(20).width(20)
-						.fill(Color.BISQUE).layoutX(x).layoutY(y).build();
-				boxes.add(r);
+		int startX = 15;
+		int startY = 30;
+		for (int v = 1; v <= INITIAL_BLOCKS_VERTICAL; v++) {
+			for (int h = 1; h <= INITIAL_BLOCKS_HORIZONTAL; h++) {
+				int x = startX + (h * 40);
+				int y = startY + (v * 40);
+				ImageView imageView = ImageViewBuilder.create().image(ICON)
+						.layoutX(x).layoutY(y).build();
+				boxes.add(imageView);
 			}
 		}
+		area.getChildren().addAll(boxes);
 	}
 
 	private void initGui(final Stage stage) {
@@ -260,7 +277,7 @@ public class HyperBallsMain extends Application {
 				.fill(Color.GRAY).root(area).build();
 		initBoxes();
 		stage.setScene(scene);
-		stage.setTitle("HyperBalls");
+		stage.setTitle("Ball Game Tutorial");
 		stage.show();
 	}
 
