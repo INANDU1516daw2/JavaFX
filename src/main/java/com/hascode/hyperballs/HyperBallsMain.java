@@ -1,16 +1,16 @@
 package com.hascode.hyperballs;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TimelineBuilder;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -22,6 +22,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBuilder;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.HyperlinkBuilder;
+import javafx.scene.control.Label;
+import javafx.scene.control.LabelBuilder;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressBarBuilder;
+import javafx.scene.control.ToolBar;
+import javafx.scene.control.ToolBarBuilder;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -47,16 +53,17 @@ public class HyperBallsMain extends Application {
 	private double paddleDragX = 0.0;
 	private double paddleTranslateX = 0.0;
 
-	private final List<Rectangle> boxes = new ArrayList<>();
+	private final ObservableList<Rectangle> boxes = FXCollections
+			.observableArrayList();
 
 	private final Circle ball = CircleBuilder.create().radius(10.0)
 			.fill(Color.BLACK).build();
 
-	private final Rectangle borderTop = RectangleBuilder.create().x(0).y(0)
+	private final Rectangle borderTop = RectangleBuilder.create().x(0).y(30)
 			.width(500).height(2).build();
 
 	private final Rectangle borderBottom = RectangleBuilder.create().x(0)
-			.y(492).width(500).height(8).build();
+			.y(500).width(500).height(2).build();
 
 	private final Rectangle borderLeft = RectangleBuilder.create().x(0).y(0)
 			.width(2).height(500).build();
@@ -75,25 +82,27 @@ public class HyperBallsMain extends Application {
 			}).onMouseDragged(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(final MouseEvent evt) {
-					double x = paddleTranslateX + evt.getSceneX() - paddleDragX;
-					paddleX.setValue(x);
+					if (!gameStopped.get()) {
+						double x = paddleTranslateX + evt.getSceneX()
+								- paddleDragX;
+						paddleX.setValue(x);
+					}
 				}
 			}).build();
 
 	private final Text infotext = TextBuilder.create()
 			.text("Press 'Start' to play!").font(Font.font("Arial", 16.0))
-			.layoutX(540).layoutY(50).build();
+			.layoutX(10).layoutY(520).build();
 
 	private final Text gameOverText = TextBuilder.create().text("Game Over")
 			.font(Font.font("Arial", 40.0)).fill(Color.RED).layoutX(150)
-			.layoutY(250).build();
+			.layoutY(270).build();
 
 	private final Text winnerText = TextBuilder.create().text("You've won!")
 			.font(Font.font("Arial", 40.0)).fill(Color.GREEN).layoutX(150)
-			.layoutY(250).build();
+			.layoutY(270).build();
 
 	private final Button startButton = ButtonBuilder.create().text("Start")
-			.layoutX(540).layoutY(100)
 			.onAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(final ActionEvent evt) {
@@ -103,15 +112,32 @@ public class HyperBallsMain extends Application {
 				}
 			}).build();
 
+	private final Button quitButton = ButtonBuilder.create().text("Quit")
+			.onAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(final ActionEvent evt) {
+					Platform.exit();
+				}
+			}).build();
+
 	private final Hyperlink link = HyperlinkBuilder.create()
-			.text("www.hascode.com").layoutX(540).layoutY(480).build();
+			.text("www.hascode.com").layoutX(360).layoutY(505).build();
+
+	private final ProgressBar progressBar = ProgressBarBuilder.create()
+			.progress(1.).build();
+
+	private final Label remainingBlocksLabel = LabelBuilder.create().build();
+
+	private final ToolBar toolbar = ToolBarBuilder.create().minWidth(500)
+			.items(startButton, quitButton, progressBar, remainingBlocksLabel)
+			.build();
 
 	private final Group area = GroupBuilder
 			.create()
 			.focusTraversable(true)
 			.children(ball, borderTop, borderBottom, borderLeft, borderRight,
-					startButton, infotext, link, paddle, gameOverText,
-					winnerText).build();
+					infotext, link, paddle, gameOverText, winnerText, toolbar)
+			.build();
 
 	private final EventHandler<ActionEvent> pulseEvent = new EventHandler<ActionEvent>() {
 		@Override
@@ -212,6 +238,7 @@ public class HyperBallsMain extends Application {
 		gameWon.set(false);
 		winnerText.visibleProperty().bind(gameWon);
 		area.requestFocus();
+		remainingBlocksLabel.setText("40 blocks remaining");
 	}
 
 	private void initBoxes() {
@@ -229,7 +256,7 @@ public class HyperBallsMain extends Application {
 	}
 
 	private void initGui(final Stage stage) {
-		Scene scene = SceneBuilder.create().width(700).height(500)
+		Scene scene = SceneBuilder.create().width(500).height(530)
 				.fill(Color.GRAY).root(area).build();
 		initBoxes();
 		stage.setScene(scene);
