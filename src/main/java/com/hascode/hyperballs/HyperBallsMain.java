@@ -29,6 +29,8 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressBarBuilder;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.ToolBarBuilder;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.DropShadowBuilder;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.ImageViewBuilder;
@@ -68,14 +70,17 @@ public class HyperBallsMain extends Application {
 	private static final Image ICON = new Image(
 			HyperBallsMain.class.getResourceAsStream("/head.png"));
 
+	private final DropShadow dropshadowEffect = DropShadowBuilder.create()
+			.offsetY(4.0).offsetX(0.5).color(Color.BLACK).build();
+
 	private final ObservableList<ImageView> boxes = FXCollections
 			.observableArrayList();
 
 	private final Circle ball = CircleBuilder.create().radius(10.0)
-			.fill(Color.BLACK).build();
+			.fill(Color.BLACK).effect(dropshadowEffect).build();
 
 	private final Rectangle borderTop = RectangleBuilder.create().x(0).y(30)
-			.width(500).height(2).build();
+			.width(500).height(2).effect(dropshadowEffect).build();
 
 	private final Rectangle borderBottom = RectangleBuilder.create().x(0)
 			.y(500).width(500).height(2).build();
@@ -87,8 +92,8 @@ public class HyperBallsMain extends Application {
 			.width(2).height(500).build();
 
 	private final Rectangle paddle = RectangleBuilder.create().x(200).y(460)
-			.width(150).height(15).fill(Color.BLACK).cursor(Cursor.HAND)
-			.onMousePressed(new EventHandler<MouseEvent>() {
+			.width(150).height(15).effect(dropshadowEffect).fill(Color.BLACK)
+			.cursor(Cursor.HAND).onMousePressed(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(final MouseEvent evt) {
 					paddleTranslateX = paddle.getTranslateX() + 150;
@@ -111,11 +116,11 @@ public class HyperBallsMain extends Application {
 
 	private final Text gameOverText = TextBuilder.create().text("Game Over")
 			.font(Font.font("Arial", 40.0)).fill(Color.RED).layoutX(150)
-			.layoutY(300).build();
+			.layoutY(330).effect(dropshadowEffect).build();
 
 	private final Text winnerText = TextBuilder.create().text("You've won!")
 			.font(Font.font("Arial", 40.0)).fill(Color.GREEN).layoutX(150)
-			.layoutY(300).build();
+			.layoutY(330).effect(dropshadowEffect).build();
 
 	private final Button startButton = ButtonBuilder.create().text("Start")
 			.onAction(new EventHandler<ActionEvent>() {
