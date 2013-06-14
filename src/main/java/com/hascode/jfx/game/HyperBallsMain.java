@@ -1,4 +1,4 @@
-package com.hascode.hyperballs;
+package com.hascode.jfx.game;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -110,10 +110,6 @@ public class HyperBallsMain extends Application {
 				}
 			}).build();
 
-	private final Text infotext = TextBuilder.create()
-			.text("Press 'Start' to play!").font(Font.font("Arial", 16.0))
-			.layoutX(10).layoutY(520).build();
-
 	private final Text gameOverText = TextBuilder.create().text("Game Over")
 			.font(Font.font("Arial", 40.0)).fill(Color.RED).layoutX(150)
 			.layoutY(330).effect(dropshadowEffect).build();
@@ -152,11 +148,14 @@ public class HyperBallsMain extends Application {
 			.items(startButton, quitButton, progressBar, remainingBlocksLabel)
 			.build();
 
+	private final ToolBar footerBar = ToolBarBuilder.create().minWidth(500)
+			.items(link).layoutY(500).build();
+
 	private final Group area = GroupBuilder
 			.create()
 			.focusTraversable(true)
 			.children(ball, borderTop, borderBottom, borderLeft, borderRight,
-					infotext, link, paddle, gameOverText, winnerText, toolbar)
+					paddle, gameOverText, winnerText, toolbar, footerBar)
 			.build();
 
 	private final EventHandler<ActionEvent> pulseEvent = new EventHandler<ActionEvent>() {
