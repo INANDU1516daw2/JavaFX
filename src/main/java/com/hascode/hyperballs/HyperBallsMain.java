@@ -8,10 +8,8 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -58,7 +56,7 @@ public class HyperBallsMain extends Application {
 	private final BooleanProperty gameStopped = new SimpleBooleanProperty();
 	private final BooleanProperty gameLost = new SimpleBooleanProperty(false);
 	private final BooleanProperty gameWon = new SimpleBooleanProperty(false);
-	private final IntegerProperty boxesLeft = new SimpleIntegerProperty(
+	private final DoubleProperty boxesLeft = new SimpleDoubleProperty(
 			INITIAL_AMOUNT_BLOCKS);
 
 	private boolean movingDown = true;
@@ -141,7 +139,7 @@ public class HyperBallsMain extends Application {
 			.text("www.hascode.com").layoutX(360).layoutY(505).build();
 
 	private final ProgressBar progressBar = ProgressBarBuilder.create()
-			.progress(INITIAL_AMOUNT_BLOCKS).build();
+			.progress(100).build();
 
 	private final Label remainingBlocksLabel = LabelBuilder.create().build();
 
@@ -227,8 +225,8 @@ public class HyperBallsMain extends Application {
 	}
 
 	private void incrementSpeed() {
-		if (movingSpeed <= 4)
-			movingSpeed += movingSpeed * 0.25;
+		if (movingSpeed <= 6)
+			movingSpeed += movingSpeed * 0.5;
 	}
 
 	private void initGame() {
@@ -253,9 +251,10 @@ public class HyperBallsMain extends Application {
 		winnerText.visibleProperty().bind(gameWon);
 		area.requestFocus();
 		progressBar.progressProperty().bind(
-				boxesLeft.subtract(INITIAL_AMOUNT_BLOCKS).multiply(-1));
+				boxesLeft.subtract(INITIAL_AMOUNT_BLOCKS).multiply(-1)
+						.divide(INITIAL_AMOUNT_BLOCKS));
 		remainingBlocksLabel.textProperty().bind(
-				Bindings.format("%s boxes left", boxesLeft.asString()));
+				Bindings.format("%.0f boxes left", boxesLeft));
 	}
 
 	private void initBoxes() {
@@ -278,7 +277,8 @@ public class HyperBallsMain extends Application {
 				.fill(Color.GRAY).root(area).build();
 		initBoxes();
 		stage.setScene(scene);
-		stage.setTitle("Ball Game Tutorial");
+		stage.setTitle("hasCode.com - Java FX 2 Ball Game Tutorial");
+		stage.getIcons().add(ICON);
 		stage.show();
 	}
 
