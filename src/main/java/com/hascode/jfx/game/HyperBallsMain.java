@@ -92,8 +92,9 @@ public class HyperBallsMain extends Application {
 			.width(2).height(500).build();
 
 	private final Rectangle paddle = RectangleBuilder.create().x(200).y(460)
-			.width(150).height(15).effect(dropshadowEffect).fill(Color.BLACK)
-			.cursor(Cursor.HAND).onMousePressed(new EventHandler<MouseEvent>() {
+			.width(100).layoutX(20).height(15).effect(dropshadowEffect)
+			.fill(Color.BLACK).cursor(Cursor.HAND)
+			.onMousePressed(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(final MouseEvent evt) {
 					paddleTranslateX = paddle.getTranslateX() + 150;
