@@ -47,6 +47,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class HyperBallsMain extends Application {
+	private static final String STYLESHEET_FILE = "/stylesheet/style.css";
 	private static final int INITIAL_BLOCKS_HORIZONTAL = 10;
 	private static final int INITIAL_BLOCKS_VERTICAL = 5;
 	private static final int INITIAL_AMOUNT_BLOCKS = INITIAL_BLOCKS_HORIZONTAL
@@ -68,7 +69,7 @@ public class HyperBallsMain extends Application {
 	private double paddleTranslateX = 0.0;
 
 	private static final Image ICON = new Image(
-			HyperBallsMain.class.getResourceAsStream("/head.png"));
+			HyperBallsMain.class.getResourceAsStream("/image/head.png"));
 
 	private final DropShadow dropshadowEffect = DropShadowBuilder.create()
 			.offsetY(4.0).offsetX(0.5).color(Color.BLACK).build();
@@ -284,6 +285,7 @@ public class HyperBallsMain extends Application {
 		stage.setScene(scene);
 		stage.setTitle("hasCode.com - Java FX 2 Ball Game Tutorial");
 		stage.getIcons().add(ICON);
+		scene.getStylesheets().add(STYLESHEET_FILE);
 		stage.show();
 	}
 
