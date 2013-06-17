@@ -9,26 +9,50 @@ import javafx.collections.ObservableList;
 import javafx.scene.image.ImageView;
 
 public class GameModel {
+	// amount of horizontal blocks.
 	private final int INITIAL_BLOCKS_HORIZONTAL = 10;
+
+	// amount of vertical blocks.
 	private final int INITIAL_BLOCKS_VERTICAL = 5;
+
+	// amount of blocks total = vertical * horizontal
 	private final int INITIAL_AMOUNT_BLOCKS = getInitialBlocksHorizontal()
 			* getInitialBlocksVertical();
 
+	// coordinates of the ball
 	private final DoubleProperty ballX = new SimpleDoubleProperty();
 	private final DoubleProperty ballY = new SimpleDoubleProperty();
+
+	// x coordinate of the paddle
 	private final DoubleProperty paddleX = new SimpleDoubleProperty();
+
+	// game is stopped?
 	private final BooleanProperty gameStopped = new SimpleBooleanProperty();
+
+	// game is lost?
 	private final BooleanProperty gameLost = new SimpleBooleanProperty(false);
+
+	// game is won?
 	private final BooleanProperty gameWon = new SimpleBooleanProperty(false);
+
+	// amount of boxes left
 	private final DoubleProperty boxesLeft = new SimpleDoubleProperty(
 			getInitialAmountBlocks());
 
+	// ball is moving in direction: down?
 	private boolean movingDown = true;
+
+	// ball is moving in direction: right?
 	private boolean movingRight = true;
+
+	// ball moving speed
 	private double movingSpeed = 1.0;
+
+	// paddle drag/translate x
 	private double paddleDragX = 0.0;
 	private double paddleTranslateX = 0.0;
 
+	// a collection of image elements
 	private final ObservableList<ImageView> boxes = FXCollections
 			.observableArrayList();
 

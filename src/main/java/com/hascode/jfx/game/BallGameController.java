@@ -78,10 +78,17 @@ public class BallGameController implements Initializable {
 		}
 	};
 
+	// THE TIMELINE, RUNS EVERY 10MS
 	private final Timeline heartbeat = TimelineBuilder.create()
 			.keyFrames(new KeyFrame(new Duration(10.0), pulseEvent))
 			.cycleCount(Timeline.INDEFINITE).build();
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javafx.fxml.Initializable#initialize(java.net.URL,
+	 * java.util.ResourceBundle)
+	 */
 	@Override
 	public void initialize(final URL url, final ResourceBundle bundle) {
 		bindPaddleMouseEvents();
@@ -93,6 +100,9 @@ public class BallGameController implements Initializable {
 		area.requestFocus();
 	}
 
+	/**
+	 * binds ui elements to model state
+	 */
 	private void bindElementsToModel() {
 		startButton.disableProperty().bind(model.getGameStopped().not());
 		ball.centerXProperty().bind(model.getBallX());
@@ -107,10 +117,16 @@ public class BallGameController implements Initializable {
 				Bindings.format("%.0f boxes left", model.getBoxesLeft()));
 	}
 
+	/**
+	 * initializes the game, is called for every new game
+	 */
 	private void initializeGame() {
 		model.reset();
 	}
 
+	/**
+	 * initializes the boxes.
+	 */
 	private void initializeBoxes() {
 		int startX = 15;
 		int startY = 30;
@@ -126,6 +142,10 @@ public class BallGameController implements Initializable {
 		area.getChildren().addAll(model.getBoxes());
 	}
 
+	/**
+	 * creates event handler for the quit button. pressing it immediatly quits
+	 * the application.
+	 */
 	private void bindQuitButtonEvents() {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -135,6 +155,10 @@ public class BallGameController implements Initializable {
 		});
 	}
 
+	/**
+	 * binds events to the start button. by pressing the start button, the game
+	 * is initialized and the timeline execution is started.
+	 */
 	private void bindStartButtonEvents() {
 		startButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -146,6 +170,9 @@ public class BallGameController implements Initializable {
 		});
 	}
 
+	/**
+	 * binds events to drag the paddle using the mouse.
+	 */
 	private void bindPaddleMouseEvents() {
 		paddle.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
@@ -166,6 +193,9 @@ public class BallGameController implements Initializable {
 		});
 	}
 
+	/**
+	 * checks if the game is won.
+	 */
 	private void checkWin() {
 		if (0 == model.getBoxesLeft().get()) {
 			model.getGameWon().set(true);
@@ -174,6 +204,9 @@ public class BallGameController implements Initializable {
 		}
 	}
 
+	/**
+	 * checks if the ball has collisions with the walls or the paddle.
+	 */
 	private void checkCollisions() {
 		checkBoxCollisions();
 		if (ball.intersects(paddle.getBoundsInLocal())) {
@@ -205,6 +238,10 @@ public class BallGameController implements Initializable {
 		}
 	}
 
+	/**
+	 * checks if the ball collides with one or more of the boxes. if there's a
+	 * collision, the box is removed.
+	 */
 	private void checkBoxCollisions() {
 		for (ImageView r : model.getBoxes()) {
 			if (r.isVisible() && ball.intersects(r.getBoundsInParent())) {
@@ -214,6 +251,10 @@ public class BallGameController implements Initializable {
 		}
 	}
 
+	/**
+	 * updates the ball position by calculating the ball's speed, position and
+	 * direction.
+	 */
 	private void updateBallPosition() {
 		double x = model.isMovingRight() ? model.getMovingSpeed() : -model
 				.getMovingSpeed();
