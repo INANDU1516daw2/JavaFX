@@ -36,6 +36,6 @@
 		<Label fx:id="remainingBlocksLabel"/>
 	</ToolBar>
 	<ToolBar minWidth="500" layoutY="500">
-		<Hyperlink text="www.hascode.com" layoutX="360" layoutY="505"/>
+		<Hyperlink text="www.hascode.com" layoutX="360" layoutY="505" />
 	</ToolBar>
 </Group>

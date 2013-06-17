@@ -91,7 +91,7 @@ public class BallGameController implements Initializable {
 
 	@Override
 	public void initialize(final URL url, final ResourceBundle bundle) {
-		applyDropShadowEffects();
+		// applyDropShadowEffects();
 		bindPaddleMouseEvents();
 		bindStartButtonEvents();
 		bindQuitButtonEvents();
@@ -116,6 +116,9 @@ public class BallGameController implements Initializable {
 	}
 
 	private void initializeGame() {
+		for (ImageView r : model.getBoxes()) {
+			r.setVisible(true);
+		}
 		model.reset();
 	}
 

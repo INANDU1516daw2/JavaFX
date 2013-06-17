@@ -2,5 +2,14 @@
 	-fx-font-size: 16pt;
 	-fx-font-family: "Arial";
 	-fx-width: 500px;
-	-fx-height:530px;
+	-fx-height: 530px;
+}
+
+#gameOverText,#winnerText {
+	-fx-font-size: 40pt;
+	-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 100), 1, 1, 4, 2 );
+}
+
+#borderTop,#paddle,#ball {
+	-fx-effect: dropshadow(three-pass-box, #000000, 10.0,0.0,0.5,4.0);
 }

@@ -69,7 +69,8 @@ public class SingleClassNoXmlBallGame extends Application {
 	private double paddleTranslateX = 0.0;
 
 	private static final Image ICON = new Image(
-			SingleClassNoXmlBallGame.class.getResourceAsStream("/image/head.png"));
+			SingleClassNoXmlBallGame.class
+					.getResourceAsStream("/image/head.png"));
 
 	private final DropShadow dropshadowEffect = DropShadowBuilder.create()
 			.offsetY(4.0).offsetX(0.5).color(Color.BLACK).build();
