@@ -16,22 +16,15 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.DropShadowBuilder;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.ImageViewBuilder;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class BallGameController implements Initializable {
-	// EFFECTS
-	private final DropShadow dropshadowEffect = DropShadowBuilder.create()
-			.offsetY(4.0).offsetX(0.5).color(Color.BLACK).build();
-
 	// UI ELEMENTS
 	@FXML
 	private Group area;
@@ -91,7 +84,6 @@ public class BallGameController implements Initializable {
 
 	@Override
 	public void initialize(final URL url, final ResourceBundle bundle) {
-		// applyDropShadowEffects();
 		bindPaddleMouseEvents();
 		bindStartButtonEvents();
 		bindQuitButtonEvents();
@@ -175,13 +167,6 @@ public class BallGameController implements Initializable {
 				}
 			}
 		});
-	}
-
-	private void applyDropShadowEffects() {
-		ball.setEffect(dropshadowEffect);
-		paddle.setEffect(dropshadowEffect);
-		gameOverText.setEffect(dropshadowEffect);
-		winnerText.setEffect(dropshadowEffect);
 	}
 
 	private void checkWin() {
