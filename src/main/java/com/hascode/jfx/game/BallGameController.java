@@ -91,7 +91,6 @@ public class BallGameController implements Initializable {
 
 	@Override
 	public void initialize(final URL url, final ResourceBundle bundle) {
-		// applyDropShadowEffects();
 		bindPaddleMouseEvents();
 		bindStartButtonEvents();
 		bindQuitButtonEvents();
@@ -175,13 +174,6 @@ public class BallGameController implements Initializable {
 				}
 			}
 		});
-	}
-
-	private void applyDropShadowEffects() {
-		ball.setEffect(dropshadowEffect);
-		paddle.setEffect(dropshadowEffect);
-		gameOverText.setEffect(dropshadowEffect);
-		winnerText.setEffect(dropshadowEffect);
 	}
 
 	private void checkWin() {
