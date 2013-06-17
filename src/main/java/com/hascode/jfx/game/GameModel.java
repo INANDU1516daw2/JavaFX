@@ -83,6 +83,8 @@ public class GameModel {
 		gameStopped.set(true);
 		getGameLost().set(false);
 		getGameWon().set(false);
+		setPaddleDragX(0.);
+		setPaddleTranslateX(0.);
 	}
 
 	public DoubleProperty getBallX() {
@@ -118,7 +120,7 @@ public class GameModel {
 		return movingDown;
 	}
 
-	public void setMovingDown(boolean movingDown) {
+	public void setMovingDown(final boolean movingDown) {
 		this.movingDown = movingDown;
 	}
 
@@ -126,7 +128,7 @@ public class GameModel {
 		return movingRight;
 	}
 
-	public void setMovingRight(boolean movingRight) {
+	public void setMovingRight(final boolean movingRight) {
 		this.movingRight = movingRight;
 	}
 
@@ -134,7 +136,7 @@ public class GameModel {
 		return movingSpeed;
 	}
 
-	public void setMovingSpeed(double movingSpeed) {
+	public void setMovingSpeed(final double movingSpeed) {
 		this.movingSpeed = movingSpeed;
 	}
 

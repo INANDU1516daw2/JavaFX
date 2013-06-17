@@ -108,9 +108,6 @@ public class BallGameController implements Initializable {
 	}
 
 	private void initializeGame() {
-		for (ImageView r : model.getBoxes()) {
-			r.setVisible(true);
-		}
 		model.reset();
 	}
 
