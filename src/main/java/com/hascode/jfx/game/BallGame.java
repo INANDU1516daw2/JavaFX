@@ -14,7 +14,7 @@ public class BallGame extends Application {
 	private static final String VIEW_GAME = "/view/GameView.fxml";
 	private static final String STYLESHEET_FILE = "/stylesheet/style.css";
 	public static final Image ICON = new Image(
-			HyperBallsMain.class.getResourceAsStream("/image/head.png"));
+			SingleClassNoXmlBallGame.class.getResourceAsStream("/image/head.png"));
 
 	@Override
 	public void start(final Stage stage) throws Exception {

@@ -46,7 +46,7 @@ import javafx.scene.text.TextBuilder;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class HyperBallsMain extends Application {
+public class SingleClassNoXmlBallGame extends Application {
 	private static final String STYLESHEET_FILE = "/stylesheet/style.css";
 	private static final int INITIAL_BLOCKS_HORIZONTAL = 10;
 	private static final int INITIAL_BLOCKS_VERTICAL = 5;
@@ -69,7 +69,7 @@ public class HyperBallsMain extends Application {
 	private double paddleTranslateX = 0.0;
 
 	private static final Image ICON = new Image(
-			HyperBallsMain.class.getResourceAsStream("/image/head.png"));
+			SingleClassNoXmlBallGame.class.getResourceAsStream("/image/head.png"));
 
 	private final DropShadow dropshadowEffect = DropShadowBuilder.create()
 			.offsetY(4.0).offsetX(0.5).color(Color.BLACK).build();

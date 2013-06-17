@@ -96,6 +96,7 @@ public class BallGameController implements Initializable {
 		bindStartButtonEvents();
 		bindQuitButtonEvents();
 		bindElementsToModel();
+		initializeBoxes();
 		initializeGame();
 		area.requestFocus();
 	}
@@ -115,7 +116,6 @@ public class BallGameController implements Initializable {
 	}
 
 	private void initializeGame() {
-		initializeBoxes();
 		model.reset();
 	}
 
@@ -147,7 +147,7 @@ public class BallGameController implements Initializable {
 		startButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent evt) {
-				// initGame();
+				initializeGame();
 				model.getGameStopped().set(false);
 				heartbeat.playFromStart();
 			}
