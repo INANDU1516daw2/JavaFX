@@ -1,0 +1,4 @@
+apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/0.3.0/javafx.plugin' 
+javafx {
+    mainClass = 'com.hascode.jfx.game.BallGame'
+}
